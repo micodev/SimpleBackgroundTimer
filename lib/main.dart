@@ -1,6 +1,15 @@
+import 'package:alarm_manager/notificationManager.dart';
 import 'package:flutter/material.dart';
+import 'package:android_alarm_manager/android_alarm_manager.dart';
 
-void main() => runApp(MyApp());
+NotificationManager n = new NotificationManager();
+
+void main() async
+{
+  WidgetsFlutterBinding.ensureInitialized();
+  await AndroidAlarmManager.initialize();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget
 {
@@ -22,7 +31,6 @@ class MyApp extends StatelessWidget
 class MyHomePage extends StatefulWidget
 {
   MyHomePage({Key key, this.title}) : super(key: key);
-
   final String title;
 
   @override
@@ -31,6 +39,13 @@ class MyHomePage extends StatefulWidget
 
 class _MyHomePageState extends State<MyHomePage>
 {
+  @override
+  initState()
+  {
+    super.initState();
+    AndroidAlarmManager.oneShotAt(DateTime.now().add(Duration(seconds: 5)), 0, notificate, exact: true, allowWhileIdle: true, wakeup: true, rescheduleOnReboot: true, alarmClock: true);
+  }
+
   @override
   Widget build(BuildContext context)
   {
@@ -42,35 +57,15 @@ class _MyHomePageState extends State<MyHomePage>
       ),
       body: Container
       (
-        child: Row
-        (
-          children: <Widget>
-          [
-            TextField
-            (
-              decoration: InputDecoration
-              (
-                border: InputBorder.none,
-                hintText: "07.30pm"
-              )
-            ),
-            FlatButton
-            (
-              child: Text("Start"),
-              onPressed: () => createTimer(),
-            )
-          ]
-        ),
-      ),
+
+      )
     );
   }
+}
 
-  void createTimer()
-  {
-    /*TODO:
-    1) Set timer to finish at 07.30pm
-    2) Create a background process that can run even if the app is closed
-    3) Run the timer
-    4) When timer is finished push a notification*/
-  }
+void notificate()
+{
+  n.initNotificationManager();
+  n.showNotificationWithDefaultSound("MyTitle", "Body");
+  return;
 }

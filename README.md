@@ -1,4 +1,4 @@
-# simple_background_timer
+# alarm_manager
 
 A new Flutter project.
 
